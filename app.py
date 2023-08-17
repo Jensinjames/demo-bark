@@ -11,8 +11,8 @@ logging.basicConfig(level=logging.INFO)
 MODEL = "suno/bark"
 AWS_ACCESS = os.getenv('AWS_ACCESS')
 AWS_BUCKET = os.getenv('AWS_BUCKET')
-HF_REGION = os.getenv('HF_REGION')
-HF_SECRET = os.getenv('HF_SECRET')
+AWS_REGION = os.getenv('AWS_REGION')
+AWS_SECRET = os.getenv('AWS_SECRET')
 
 app = Potassium("bark")
 
@@ -57,8 +57,8 @@ def handler(context: dict, request: Request) -> Response:
     scipy.io.wavfile.write(file_name, rate=sampling_rate, data=speech_output[0].cpu().numpy())
     session = boto3.Session(
         aws_access_key_id=AWS_ACCESS,
-        aws_secret_access_key=HF_SECRET,
-        region_name=HF_REGION
+        aws_secret_access_key=AWS_SECRET,
+        region_name=AWS_REGION
     )
     s3 = session.client('s3')
     s3.upload_file(file_name, AWS_BUCKET, file_name)
